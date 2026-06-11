@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 2%;
+    --foreground: 220 9% 96%;
+    --card: 240 10% 4%;
+    --card-foreground: 220 9% 96%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 220 9% 96%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 240 33% 4%;
+    --secondary: 210 100% 50%;
+    --secondary-foreground: 220 9% 96%;
+    --muted: 240 5% 12%;
+    --muted-foreground: 220 5% 55%;
+    --accent: 180 100% 50%;
+    --accent-foreground: 220 9% 96%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
+    --ring: 180 100% 50%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-obsidian text-mist antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Perspective Grid Background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    background-image:
+      linear-gradient(rgba(0, 255, 255, 0.25) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.25) 1px, transparent 1px);
+    background-size: 100px 100px;
+    transform: perspective(500px) rotateX(60deg);
+    transform-origin: center top;
+  }
+
+  /* Noise texture overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Instrument Serif', Georgia, serif;
+  }
+
+  ::selection {
+    background: rgba(0, 255, 255, 0.25);
+    color: #F3F4F6;
+  }
+}
+
+@layer components {
+  .mono-tag {
+    @apply font-mono text-mono-tag uppercase tracking-wider;
+  }
+
+  .section-padding {
+    @apply py-section px-6;
+  }
+
+  .content-max-width {
+    @apply max-w-content mx-auto;
+  }
+
+  .pill-button {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-body text-sm font-medium transition-all duration-300;
+  }
+
+  .pill-button-primary {
+    @apply pill-button bg-cyan-glow text-obsidian hover:brightness-110 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)];
+  }
+
+  .pill-button-secondary {
+    @apply pill-button border border-ash/30 text-mist hover:border-cyan-glow hover:text-cyan-glow bg-transparent;
+  }
+
+  .glow-border {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.15), 0 0 40px rgba(0, 255, 255, 0.08);
+  }
+
+  .glow-border-purple {
+    box-shadow: 0 0 20px rgba(0, 128, 255, 0.2), 0 0 40px rgba(0, 128, 255, 0.1);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-cyan-glow to-cyan-dark bg-clip-text text-transparent;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:border-cyan-glow/30;
+  }
+
+  /* Wave blur char styles for Splitting.js */
+  .char {
+    display: inline-block;
+    will-change: opacity, filter;
+  }
+
+  .word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+}
+
+@layer utilities {
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    body::before,
+    body::after {
+      display: none;
+    }
+  }
+}
