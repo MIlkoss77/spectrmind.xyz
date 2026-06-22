@@ -8,6 +8,8 @@ import { Check, ShieldCheck, Clock, Flame, CreditCard } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8u4Z4XiGgG9DfhLiJxOIadgXUxACTGm3paNp5OQ9OgkBn9H-aX4MOHiqZiAZ1HF_PzQ/exec';
+
 export default function Pricing() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -17,6 +19,7 @@ export default function Pricing() {
   // FOMO Countdown Timer (15 minutes)
   const [timeLeft, setTimeLeft] = useState(900); // 15 mins in seconds
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const [pricingEmail, setPricingEmail] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -195,10 +198,18 @@ export default function Pricing() {
           {/* CTA & ConvertKit Form */}
           <div className="space-y-4">
             <form 
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
+                if (!pricingEmail) return;
                 setIsCheckoutLoading(true);
-                // Simulate ConvertKit form submission
+                try {
+                  await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: pricingEmail }),
+                  });
+                } catch {}
                 setTimeout(() => {
                   setIsCheckoutLoading(false);
                   router.push("/success-download");
@@ -208,6 +219,8 @@ export default function Pricing() {
             >
               <input 
                 type="email" 
+                value={pricingEmail}
+                onChange={(e) => setPricingEmail(e.target.value)}
                 placeholder="Enter your primary email"
                 required
                 className="w-full h-14 px-5 rounded-full bg-black/40 border border-cyan-glow/30 text-white placeholder-ash/50 focus:border-cyan-glow outline-none transition-all font-body text-sm text-center"
