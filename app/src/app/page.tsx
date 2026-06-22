@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import AnimatedBackground from "@/components/AnimatedBackground";
 import FloatingOrbs from "@/components/FloatingOrbs";
@@ -17,11 +15,12 @@ import FAQ from "@/sections/FAQ";
 import FinalCTA from "@/sections/FinalCTA";
 import Footer, { CookieBanner } from "@/sections/Footer";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function Home() {
   useEffect(() => {
-    // Initialize smooth scroll behavior
+    const gsap = require("gsap");
+    const { ScrollTrigger } = require("gsap/ScrollTrigger");
+    gsap.registerPlugin(ScrollTrigger);
+
     const sections = document.querySelectorAll("section");
     sections.forEach((section) => {
       ScrollTrigger.create({
@@ -33,7 +32,6 @@ export default function Home() {
       });
     });
 
-    // Refresh ScrollTrigger on resize
     const handleResize = () => {
       ScrollTrigger.refresh();
     };
@@ -41,7 +39,11 @@ export default function Home() {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      ScrollTrigger.getAll().forEach((t: unknown) => {
+        if (typeof t === "object" && t !== null && "kill" in t) {
+          (t as { kill: () => void }).kill();
+        }
+      });
     };
   }, []);
 
