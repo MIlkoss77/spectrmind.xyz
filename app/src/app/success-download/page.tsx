@@ -1,15 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Download, ShieldCheck, Cpu, ArrowRight } from "lucide-react";
+import { CheckCircle2, Download, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 export default function SuccessDownload() {
   const handleDownload = () => {
     // Path to the PDF guide (assuming placed in public folder as SPECTRE_Protocols_Guide.pdf or hosted)
     const link = document.createElement("a");
-    link.href = "/SPECTRE_Protocols_Guide.pdf";
-    link.download = "SPECTRE_Protocols_Guide.pdf";
+    link.href = "/SPECTRE_Protocols_Comprehensive_Guide.pdf";
+    link.download = "SPECTRE_Protocols_Comprehensive_Guide.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -73,31 +73,6 @@ export default function SuccessDownload() {
             >
               Download
             </button>
-          </div>
-
-          {/* Step 2: PWA Tracking */}
-          <div className="bg-obsidian/40 border border-ash/10 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-cyan-glow/10 rounded-lg text-cyan-glow">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-body text-sm font-semibold text-mist">
-                  Spectr PWA Neurotracker
-                </h3>
-                <p className="font-body text-xs text-ash">
-                  Log cycles & unlock Trading Terminal
-                </p>
-              </div>
-            </div>
-            <Link
-              href="https://spectrtrading.com/tracker" // Replace with PWA domain once deployed
-              target="_blank"
-              className="px-4 py-2 text-xs font-semibold border border-cyan-glow/30 text-cyan-glow rounded-full hover:bg-cyan-glow/10 transition-all font-body uppercase tracking-wider flex items-center justify-center gap-1.5"
-            >
-              Launch PWA
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
         </div>
 
