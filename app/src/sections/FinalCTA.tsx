@@ -7,7 +7,7 @@ import { Lock, Shield, Zap, Download, Loader2 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const GOOGLE_SCRIPT_URL = 'ВСТАВЬТЕ_ВАШ_URL_СЮДА';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8u4Z4XiGgG9DfhLiJxOIadgXUxACTGm3paNp5OQ9OgkBn9H-aX4MOHiqZiAZ1HF_PzQ/exec';
 
 const trustBadges = [
   { icon: Lock, label: "256-bit SSL" },
