@@ -3,9 +3,11 @@
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Lock, Shield, Zap } from "lucide-react";
+import { Lock, Shield, Zap, Download, Loader2 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const GOOGLE_SCRIPT_URL = 'ВСТАВЬТЕ_ВАШ_URL_СЮДА';
 
 const trustBadges = [
   { icon: Lock, label: "256-bit SSL" },
@@ -20,6 +22,8 @@ export default function FinalCTA() {
   const badgesRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -83,14 +87,25 @@ export default function FinalCTA() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
       setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setEmail("");
-      }, 3000);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,8 +158,18 @@ export default function FinalCTA() {
           style={{ opacity: 0 }}
         >
           {submitted ? (
-            <div className="pill-button-primary h-12 px-8 bg-peridot-spark text-obsidian font-medium">
-              Welcome to the neural revolution! Check your inbox.
+            <div className="flex flex-col items-center gap-4">
+              <div className="pill-button-primary h-12 px-8 bg-peridot-spark text-obsidian font-medium">
+                Your guide is ready!
+              </div>
+              <a
+                href="/SPECTRE_Protocols_Comprehensive_Guide.pdf"
+                download
+                className="inline-flex items-center gap-2 px-6 py-3 border border-peridot-spark/50 text-peridot-spark font-medium rounded-full hover:bg-peridot-spark/10 transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Download Free Guide
+              </a>
             </div>
           ) : (
             <>
@@ -156,12 +181,27 @@ export default function FinalCTA() {
                 required
                 className="h-12 px-6 rounded-full bg-transparent border border-ash/30 text-mist placeholder:text-ash/50 font-body text-sm focus:outline-none focus:border-peridot-spark transition-colors min-w-[280px]"
               />
-              <button type="submit" className="pill-button-primary h-12 px-8">
-                Begin Transformation
+              <button
+                type="submit"
+                disabled={loading}
+                className="pill-button-primary h-12 px-8 flex items-center gap-2 disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  "Begin Transformation"
+                )}
               </button>
             </>
           )}
         </form>
+
+        {error && (
+          <p className="text-sm text-red-400 mb-4">{error}</p>
+        )}
 
         {/* Trust Badges */}
         <div
